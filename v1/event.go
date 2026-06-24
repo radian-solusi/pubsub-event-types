@@ -17,7 +17,7 @@ type ActivityEvent struct {
 type NotificationEvent struct {
 	Category    string    `json:"category"`
 	Subcategory string    `json:"subcategory"`
-	IPAddress   string    `json:"ip_address"`
+	IPAddress   *string   `json:"ip_address,omitempty"`
 	Type        string    `json:"type"`
 	UserID      string    `json:"user_id"`
 	Message     string    `json:"message"`

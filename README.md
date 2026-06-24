@@ -30,6 +30,19 @@ func main() {
 	}
 
 	_ = event
+
+	// or notification event
+	notification := v1.NotificationEvent{
+		Category:    "system_notification",
+		Subcategory: "maintenance",
+		Message:     "System maintenance scheduled",
+		CreatedAt:   time.Now(),
+		UserID:      "xsaeaf-sdeaadff-eaf33",
+		Type: 	  "email", // "email" or "sms"
+		Phone:    "62852344431331" //user phone number to send when Type is "sms"
+		Email:    "example@mail.com", //user email to send when Type is "email"
+	}
+	
 }
 ```
 
@@ -39,4 +52,5 @@ func main() {
 import pubsub "github.com/radian-solusi/pubsub-event-types/v1"
 
 activity := pubsub.ActivityEvent{}
+notification := pubsub.NotificationEvent{}
 ```

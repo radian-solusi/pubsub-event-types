@@ -10,6 +10,8 @@ type ActivityEvent struct {
 	Message     string    `json:"message"`
 	CreatedAt   time.Time `json:"created_at"`
 	Metadata    *string   `json:"metadata,omitempty"`
+	Phone       *string   `json:"phone,omitempty"`
+	Email       *string   `json:"email,omitempty"`
 }
 
 type NotificationEvent struct {

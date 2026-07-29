@@ -14,6 +14,12 @@ type ActivityEvent struct {
 	Email       *string   `json:"email,omitempty"`
 }
 
+// MetaData is the structured payload NotificationEvent.Metadata carries.
+type MetaData struct {
+	ActionUrl *string `json:"action_url,omitempty"`
+	Code      *string `json:"code,omitempty"`
+}
+
 type NotificationEvent struct {
 	Category    string    `json:"category"`
 	Subcategory string    `json:"subcategory"`
@@ -22,7 +28,7 @@ type NotificationEvent struct {
 	UserID      string    `json:"user_id"`
 	Message     string    `json:"message"`
 	CreatedAt   time.Time `json:"created_at"`
-	Metadata    *string   `json:"metadata,omitempty"`
+	Metadata    *MetaData `json:"metadata,omitempty"`
 	Phone       *string   `json:"phone,omitempty"`
 	Email       *string   `json:"email,omitempty"`
 }

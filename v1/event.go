@@ -21,21 +21,14 @@ type ActivityEvent struct {
 // number or date reads, the renderer only substitutes. Values may be PII
 // (investor name, order code, old/new contact details) and MUST NOT be logged.
 //
-// Two keys are RESERVED and are not ordinary values — a consumer lifts them into
-// the dedicated link slots of whatever it renders, so the set of inputs that can
-// inject a clickable destination stays fixed and reviewable:
-//
-//	action_url       the primary call to action
-//	unsubscribe_url  the footer opt-out
-//
-// Do not use either name for ordinary copy.
+// This module defines the envelope, not the vocabulary: no key name is reserved,
+// enumerated, or given a constant here. Which names a notification requires is
+// the consuming service's template contract — for notification-otp, each
+// template's manifest declares them and the dispatcher rejects an event that
+// omits one. That includes the keys carrying links (action_url,
+// unsubscribe_url); they are ordinary entries in this bag, and the rule that
+// keeps other values out of a URL position lives in that service's CI, not here.
 type MetaData map[string]string
-
-// Reserved MetaData keys. See MetaData.
-const (
-	MetaKeyActionURL      = "action_url"
-	MetaKeyUnsubscribeURL = "unsubscribe_url"
-)
 
 type NotificationEvent struct {
 	Category    string    `json:"category"`

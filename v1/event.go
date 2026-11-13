@@ -2,6 +2,22 @@ package v1
 
 import "time"
 
+// Wire statuses of an ActivityEvent. RUNNING and TIMEOUT are not wire statuses;
+// they exist only on the consumer's stored document.
+const (
+	ActivityStatusBegin     = "BEGIN"
+	ActivityStatusCompleted = "COMPLETED"
+	ActivityStatusFailed    = "FAILED"
+)
+
+// ActivityEvent records something a service did.
+//
+// A process is one BEGIN event plus one terminal event (COMPLETED or FAILED)
+// sharing the same ActivityID. An event without an ActivityID is a one-off
+// occurrence, treated as COMPLETED. The lifecycle fields are all omitempty, so
+// the legacy JSON shape is unchanged.
+//
+// Message and Metadata MUST NOT contain PII.
 type ActivityEvent struct {
 	Category    string    `json:"category"`
 	Subcategory string    `json:"subcategory"`
@@ -12,6 +28,18 @@ type ActivityEvent struct {
 	Metadata    *string   `json:"metadata,omitempty"`
 	Phone       *string   `json:"phone,omitempty"`
 	Email       *string   `json:"email,omitempty"`
+
+	EventID    string     `json:"event_id,omitempty"`    // UUIDv7, unique per published message (dedupe)
+	ActivityID string     `json:"activity_id,omitempty"` // UUIDv7, shared by BEGIN and terminal event
+	Status     string     `json:"status,omitempty"`      // ActivityStatus*
+	Name       string     `json:"name,omitempty"`        // human-readable process name
+	Source     string     `json:"source,omitempty"`      // web|console|subscriber|scheduler|system
+	Service    string     `json:"service,omitempty"`
+	Pod        string     `json:"pod,omitempty"`
+	StartedAt  *time.Time `json:"started_at,omitempty"` // BEGIN time; repeated on the terminal event
+	EndedAt    *time.Time `json:"ended_at,omitempty"`   // terminal event only
+	Error      string     `json:"error,omitempty"`      // FAILED only
+	TraceID    string     `json:"trace_id,omitempty"`   // OTel trace id, 32 hex chars
 }
 
 // MetaData is the flat, producer-supplied value bag NotificationEvent.Metadata

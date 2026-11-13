@@ -46,6 +46,22 @@ func main() {
 }
 ```
 
+### Activity lifecycle
+
+One process = a `BEGIN` event + one terminal event (`COMPLETED`/`FAILED`) sharing `ActivityID`.
+An event without `ActivityID` is a one-off. No PII in `Message`/`Metadata`.
+
+```go
+start := time.Now()
+begin := v1.ActivityEvent{EventID: id1, ActivityID: aid, Status: v1.ActivityStatusBegin,
+	Name: "Sync KSEI SID", Source: "console", Service: "sid-ksei", StartedAt: &start, CreatedAt: start}
+
+end := time.Now()
+done := begin
+done.EventID, done.Status, done.EndedAt, done.CreatedAt = id2, v1.ActivityStatusFailed, &end, end
+done.Error = "timeout" // FAILED only; StartedAt is repeated from BEGIN
+```
+
 ## Alternate import alias
 
 ```go

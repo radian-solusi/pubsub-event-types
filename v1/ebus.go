@@ -3,8 +3,21 @@ package v1
 import "time"
 
 const (
-	EbusEmisiActionOfferingStarted  = "offering_started"
+	// Sent by ebus-pipeline on waiting_for_offering -> offering and on the new
+	// pra_effective -> offering (IsBookBuilding == false); ebus-order consumes it
+	// to drop book-building orders whose yield exceeds the offering yield.
+	EbusEmisiActionOfferingStarted = "offering_started"
+	// Sent by ebus-pipeline on offering -> allotment; ebus-order consumes it to run
+	// the allotment cleansing (unconfirmed BB, unapproved, invalid SID/SRE).
 	EbusEmisiActionAllotmentStarted = "allotment_started"
+	// Sent by ebus-pipeline when UpdatePipeline cancels >= 1 series while the emisi
+	// is in book_building/waiting_for_offering/offering; ebus-order drops the active
+	// orders of the cancelled series. The cancelled series are derived by ebus-order
+	// from series.status, so the event carries no series list.
+	EbusEmisiActionSeriesCancelled = "series_cancelled"
+	// Sent by ebus-pipeline when the emisi moves to cancelled; ebus-order drops the
+	// active orders of every series of that emisi.
+	EbusEmisiActionPipelineCancelled = "pipeline_cancelled"
 )
 
 // EbusEmisiProcessEvent: ebus-pipeline -> ebus-order, topic ebus-emisi-process-events.
